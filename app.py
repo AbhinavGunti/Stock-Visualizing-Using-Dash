@@ -1,4 +1,4 @@
-from dash import dash, html, dcc, callback_context
+from dash import dash, html, dcc, ctx
 from datetime import datetime as dt
 from dash.dependencies import Input, Output, State
 
@@ -16,17 +16,18 @@ app.layout = html.Div([html.Div(
             html.Div([
                 html.Label("Input Stock Code : ",id="stock_code_label"),
                 html.Br(),
-                dcc.Input(id="stock-code",type='text',value="AAPL"),
+                dcc.Input(id="stock-code",type='text'),
                 html.Button('Submit',id="submit-stock-code",n_clicks=0)
             ]),
             html.Div([
                 html.Br(),
                 dcc.DatePickerRange(
                     id='my-date-picker-range',
-                    min_date_allowed=dt(2022,1,1),
+                    min_date_allowed=dt(2021,1,1),
                     max_date_allowed=dt(2022, 6, 1),
-                    initial_visible_month=dt(2022, 1, 1),
-                    end_date=dt(2022, 6, 1)
+                    start_date_placeholder_text='MM/DD/YYYY',
+                    end_date_placeholder_text='MM/DD/YYYY',
+                    # initial_visible_month=dt(2022, 1, 1)
                     )            
                 ]),
             html.Div([
@@ -46,12 +47,14 @@ app.layout = html.Div([html.Div(
             html.Div(
                   [  # Logo
                     # Company Name
-                    html.Div([html.Img(id='logo-img',src=""),                
+                    html.Div([html.Img(id='logo-img',src="https://i.pinimg.com/originals/f5/05/24/f50524ee5f161f437400aaf215c9e12f.jpg"),                
                     html.P(id='short-name')],id="company-header"),
-                    html.P(id='long-buisness-summary')
                   ],
                 className="header",id="logo_company_name"),
             html.Div( #Description
+                    [
+                        html.P(id='long-buisness-summary')
+                    ],
               id="description", className="decription_ticker"),
             html.Div([
                 # Stock price plot
@@ -68,15 +71,38 @@ app.layout = html.Div([html.Div(
 @app.callback(
     (Output("logo-img","src"),
     Output("short-name","children"),
-    Output("long-buisness-summary","children"),),
+    Output("description","children"),),
     State("stock-code","value"),
     Input("submit-stock-code","n_clicks")
 )
 def company_info(val,btn1):
-    ticker = yf.Ticker(val)
-    inf = ticker.info
-    df = pd.DataFrame().from_dict(inf, orient="index").T
-    return df.logo_url[0],df.shortName[0],df.longBusinessSummary[0]
-    # df's first element of 'longBusinessSummary', df's first element value of 'logo_url', df's first element value of 'shortName'
+    changed_id2 = [p['prop_id'] for p in ctx.triggered][0]
+    if 'submit-stock-code' in changed_id2:
+        ticker = yf.Ticker(val)
+        inf = ticker.info
+        df = pd.DataFrame().from_dict(inf, orient="index").T
+        return df.logo_url[0],df.shortName[0],df.longBusinessSummary[0]
+        # df's first element of 'longBusinessSummary', df's first element value of 'logo_url', df's first element value of 'shortName'
+    else:
+        return "https://i.pinimg.com/originals/f5/05/24/f50524ee5f161f437400aaf215c9e12f.jpg","",""
+@app.callback(
+    Output("graphs-content","children"),
+    State("stock-code","value"),
+    State("my-date-picker-range","start_date"),
+    State("my-date-picker-range","end_date"),
+    Input("submit-stock-price","n_clicks")
+)
+def graph(input,sd,ed,btn2):
+    changed_id2 = [p['prop_id'] for p in ctx.triggered][0]
+    if 'submit-stock-price' in changed_id2:
+        df = yf.download(input,sd,ed)
+        df.reset_index(inplace=True)
+        fig = get_stock_price_fig(df)
+        return dcc.Graph(figure=fig)
+    # plot the graph of fig using DCC function
+
+def get_stock_price_fig(df):
+    fig = px.line(df,x= "Date",y= ["Open","Close"],title="Closing and Opening Price vs Date")
+    return fig
 if __name__ == '__main__':
     app.run_server(debug=True)
