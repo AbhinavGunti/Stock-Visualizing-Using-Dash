@@ -97,8 +97,11 @@ def graph(input,sd,ed,btn2):
     if 'submit-stock-price' in changed_id2:
         df = yf.download(input,sd,ed)
         df.reset_index(inplace=True)
+        print(df)
         fig = get_stock_price_fig(df)
         return dcc.Graph(figure=fig)
+    else:
+        return ""
     # plot the graph of fig using DCC function
 
 def get_stock_price_fig(df):
@@ -118,6 +121,8 @@ def graph(input,sd,ed,btn2):
         df.reset_index(inplace=True)
         fig = get_more(df)
         return dcc.Graph(figure=fig)
+    else:
+        return ""
     # plot the graph of fig using Exponential Moving Average(EMA) function
 def get_more(df):
     df['EWA_20'] = df['Close'].ewm(span=20, adjust=False).mean()
