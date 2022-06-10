@@ -3,7 +3,6 @@
 }
 .inputs {
     width: 500px;
-    height: 600px;
     align-items: center;
     display: flex;
     flex-direction: column;
@@ -55,4 +54,39 @@
     margin:30px;
     width:150px;
     height:50px;
+}
+.content{
+    display: inline-block;
+    margin-left:50px;
+    width:700px    
+}
+#logo-img{
+    display: inline-block;
+    width: 128px;
+    height: 128px;
+    
+}
+#short-name{
+    display: inline-block;
+    margin:0;
+    font-size:xx-large;
+    position: absolute;
+    top: 10%;
+    /* -ms-transform: translateY(-50%);
+    transform: translateY(-50%); */
+    width: 500px;
+    padding-left: 20px;
+    /* padding: 10px; */
+    /* text-align: center; */
+}
+#long-buisness-summary{
+
+}
+/* #logo_company_name{
+    display: inline-block;
+} */
+#company-header{
+    /* display: inline-block; */
+    /* align-items: center; */
+    width: 700px;
 }

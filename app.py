@@ -16,7 +16,7 @@ app.layout = html.Div([html.Div(
             html.Div([
                 html.Label("Input Stock Code : ",id="stock_code_label"),
                 html.Br(),
-                dcc.Input(id="stock-code",type='text',value=""),
+                dcc.Input(id="stock-code",type='text',value="AAPL"),
                 html.Button('Submit',id="submit-stock-code",n_clicks=0)
             ]),
             html.Div([
@@ -46,6 +46,9 @@ app.layout = html.Div([html.Div(
             html.Div(
                   [  # Logo
                     # Company Name
+                    html.Div([html.Img(id='logo-img',src=""),                
+                    html.P(id='short-name')],id="company-header"),
+                    html.P(id='long-buisness-summary')
                   ],
                 className="header",id="logo_company_name"),
             html.Div( #Description
@@ -63,16 +66,17 @@ app.layout = html.Div([html.Div(
         className="content")],
         className="container")
 @app.callback(
-    Output("logo_company_name","children"),
+    (Output("logo-img","src"),
+    Output("short-name","children"),
+    Output("long-buisness-summary","children"),),
     State("stock-code","value"),
     Input("submit-stock-code","n_clicks")
 )
 def company_info(val,btn1):
-    if btn1!=0:
-        ticker = yf.Ticker(val)
-        inf = ticker.info
-        df = pd.DataFrame().from_dict(inf, orient="index").T
-        return "".format(df.logo_url[0],df.shortName[0],df.longBusinessSummary[0])
-        # df's first element of 'longBusinessSummary', df's first element value of 'logo_url', df's first element value of 'shortName'
+    ticker = yf.Ticker(val)
+    inf = ticker.info
+    df = pd.DataFrame().from_dict(inf, orient="index").T
+    return df.logo_url[0],df.shortName[0],df.longBusinessSummary[0]
+    # df's first element of 'longBusinessSummary', df's first element value of 'logo_url', df's first element value of 'shortName'
 if __name__ == '__main__':
     app.run_server(debug=True)
