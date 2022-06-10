@@ -104,5 +104,25 @@ def graph(input,sd,ed,btn2):
 def get_stock_price_fig(df):
     fig = px.line(df,x= "Date",y= ["Open","Close"],title="Closing and Opening Price vs Date")
     return fig
+@app.callback(
+    Output("main-content","children"),
+    State("stock-code","value"),
+    State("my-date-picker-range","start_date"),
+    State("my-date-picker-range","end_date"),
+    Input("submit-indicators","n_clicks")
+)
+def graph(input,sd,ed,btn2):
+    changed_id2 = [p['prop_id'] for p in ctx.triggered][0]
+    if 'submit-indicators' in changed_id2:
+        df = yf.download(input,sd,ed)
+        df.reset_index(inplace=True)
+        fig = get_more(df)
+        return dcc.Graph(figure=fig)
+    # plot the graph of fig using Exponential Moving Average(EMA) function
+def get_more(df):
+    df['EWA_20'] = df['Close'].ewm(span=20, adjust=False).mean()
+    fig = px.scatter(df,x="Date",y="EWA_20",title="Exponential Moving Average vs Date")
+    fig.update_traces(mode="lines+markers+text")#lines,markers,text
+    return fig
 if __name__ == '__main__':
     app.run_server(debug=True)
