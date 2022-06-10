@@ -1,0 +1,58 @@
+.container{
+    display: flex;
+}
+.inputs {
+    width: 500px;
+    height: 600px;
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    background-color: rgb(5, 107, 107);
+  }
+#start{
+    padding:10px;
+    font: 1.5em sans-serif;
+}
+#stock_code_label{
+    font: 1em sans-serif;
+    color:rgba(0, 0, 0, 0.8);
+}
+#stock-code{
+    margin-top: 20px;
+    margin-bottom: 20px;
+
+}
+#submit-stock-code{
+    margin-top: 20px;
+    margin-bottom: 20px;
+    border:2px solid black;
+    background-color:rgb(21, 170, 120)
+}
+/* #my-date-picker-range{
+} */
+#submit-stock-price{
+    background-color:rgb(21, 170, 120);
+    margin:30px;
+    width:150px;
+    height:50px;
+}
+#submit-indicators{
+    border:2px solid black;
+    background-color:rgb(21, 170, 120);
+    margin: 30px;
+    width:150px;
+    height:50px;
+}
+#number-of-days{
+    margin:30px;
+    width:150px;
+    height:50px;
+}
+#submit-forecast{
+    border:2px solid black;
+    background-color:rgb(21, 170, 120);
+    margin:30px;
+    width:150px;
+    height:50px;
+}
