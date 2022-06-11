@@ -1,7 +1,7 @@
 from dash import dash, html, dcc, ctx
 from datetime import datetime as dt
 from dash.dependencies import Input, Output, State
-from numpy import ediff1d
+
 
 
 import yfinance as yf

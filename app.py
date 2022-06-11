@@ -97,7 +97,6 @@ def graph(input,sd,ed,btn2):
     if 'submit-stock-price' in changed_id2:
         df = yf.download(input,sd,ed)
         df.reset_index(inplace=True)
-        print(df)
         fig = get_stock_price_fig(df)
         return dcc.Graph(figure=fig)
     else:
